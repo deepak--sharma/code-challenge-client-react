@@ -1,53 +1,19 @@
 import { useEffect, useState } from 'react';
 
-const data = [
-  {
-    id: '1',
-    name: 'Pilsner',
-    minimumTemperature: 4,
-    maximumTemperature: 6,
-  },
-  {
-    id: '2',
-    name: 'IPA',
-    minimumTemperature: 5,
-    maximumTemperature: 6,
-  },
-  {
-    id: '3',
-    name: 'Lager',
-    minimumTemperature: 4,
-    maximumTemperature: 7,
-  },
-  {
-    id: '4',
-    name: 'Stout',
-    minimumTemperature: 6,
-    maximumTemperature: 8,
-  },
-  {
-    id: '5',
-    name: 'Wheat beer',
-    minimumTemperature: 3,
-    maximumTemperature: 5,
-  },
-  {
-    id: '6',
-    name: 'Pale Ale',
-    minimumTemperature: 4,
-    maximumTemperature: 6,
-  },
-];
 
-function App() {
+const App = (props) => {
   const [items, setItems] = useState({});
-
+  const { data } = props;
   useEffect(() => {
     const request = () =>
       data.forEach((product) => {
+        console.log("product is ", product);
         fetch(`http://localhost:8081/temperature/${product.id}`)
           .then((response) => response.json())
-          .then((response) =>
+          .then((response) => {
+            console.log("items are ", items)
+            console.log("new resp is ", response)
+            console.log("product temperature is ", product.name);
             setItems((prevItems) => ({
               ...prevItems,
               [product.id]: {
@@ -55,6 +21,7 @@ function App() {
                 ...response,
               },
             }))
+          }
           );
       });
 
@@ -66,6 +33,7 @@ function App() {
   return (
     <div className="App">
       <h2>Beers</h2>
+      <div>{items & items[1]}</div>
       <table>
         <thead>
           <tr>
@@ -87,7 +55,7 @@ function App() {
                 {items[itemKey].temperature <=
                   items[itemKey].maximumTemperature &&
                   items[itemKey].temperature >=
-                    items[itemKey].minimumTemperature && <span>all good</span>}
+                  items[itemKey].minimumTemperature && <span>all good</span>}
               </td>
             </tr>
           ))}
